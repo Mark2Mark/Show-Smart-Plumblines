@@ -12,6 +12,10 @@ Download or clone the whole `Glyphsapp-Plugins`repo (it will contain more plugin
 
 ![Show Smart Plumblines Demo](https://raw.githubusercontent.com/DeutschMark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2012.png?raw=true "Show Smart Plumblines Demo")
 
+![Show Smart Plumblines Demo](https://raw.githubusercontent.com/DeutschMark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2013.png?raw=true "Show Smart Plumblines Demo")
+
+![Show Smart Plumblines Demo](https://raw.githubusercontent.com/DeutschMark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2014.png?raw=true "Show Smart Plumblines Demo")
+
 ### Known issues
 
 - None so far
