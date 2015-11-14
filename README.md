@@ -10,7 +10,7 @@ Download or clone the whole `Glyphsapp-Plugins`repo (it will contain more plugin
 
 ### Examples
 
-![Show Smart Plumblines Demo](https://raw.githubusercontent.com/DeutschMark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2006.png?raw=true "Show Smart Plumblines Demo")
+![Show Smart Plumblines Demo](https://raw.githubusercontent.com/DeutschMark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2003.png?raw=true "Show Smart Plumblines Demo")
 
 ### Known issues
 
