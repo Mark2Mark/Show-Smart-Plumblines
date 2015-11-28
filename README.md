@@ -3,7 +3,7 @@
 ## Plugin for Glyphsapp
 
 This is a Plugin for the [Glyphs font editor](http://glyphsapp.com/).  
-By Default it displays **live guidelines** at the center of each paths’ `red` and components’ `grey` bounding box.  
+By default it displays **live guidelines** at the center of each paths’ `red` and components’ `grey` bounding box.  
 If you select anything, it also displays the center of that selection `blue dashed`.  
 One major feature is that the guideline **automatically matches your italic angle**.  
 This is usefull for aligning objects by sight.
