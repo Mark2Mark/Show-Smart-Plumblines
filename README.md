@@ -29,15 +29,15 @@ When ever you need it, toggle `Show * Smart Plumblines` from the view menu.
 
 ![Show Smart Plumblines Demo](https://github.com/DeutschMark/Show-Smart-Plumblines/blob/3ecae55c883b3720b8f58adf1f80453607d1cd6d/Screenshots/SmPlL%2014.png?raw=true "Show Smart Plumblines Demo")
 
-### Known issues
+#### Known issues
 
 - None so far
 
-### Pull Requests
+#### Pull Requests
 
 Feel free to comment or pull requests for any improvements.
 
-### License
+#### License
 
 Copyright 2015 [Mark Frömberg](http://www.markfromberg.com/) *@DeutschMark*
 
