@@ -5,7 +5,11 @@
 By default it displays **live guidelines** at the center of each paths’ `red` and components’ `grey` bounding box.  
 If you select anything, it also displays the center of that selection `blue dashed`.  
 One major feature is that the guideline **automatically matches your italic angle**.  
-This is usefull for aligning objects by sight.
+This is usefull for aligning objects by sight. As well as:
+- Align multiple paths and/or components
+- Setting up (horizontal) positions of anchors
+- Editing segments while easily keeping italic angle
+- etc.
 
 ### Install
 
