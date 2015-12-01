@@ -37,7 +37,7 @@ When ever you need it, toggle `Show * Smart Plumblines` from the view menu. Ther
 
 ##### Known issues
 
-- None so far
+- The center of angled path might not be 100% correct currently (e.g. if it is tapered. Working on it …
 
 ##### Pull Requests
 
