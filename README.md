@@ -27,7 +27,7 @@ When ever you need it, toggle `Show * Smart Plumblines` from the view menu. Ther
 
 ### Examples
 
-![Show Smart Plumblines Live Demo](https://raw.githubusercontent.com/DeutschMark/Show-Smart-Plumblines/19884867cb3b3118e195f847893e8278fcaa8fed/Screenshots/SmartPlumblines%20-%20ScreenCast%2000.gif?raw=true "Show Smart Plumblines Live Demo")
+![Show Smart Plumblines Live Demo](https://raw.githubusercontent.com/DeutschMark/Show-Smart-Plumblines/19884867cb3b3118e195f847893e8278fcaa8fed/Screenshots/SmartPlumblines%20-%20ScreenCast%2001.gif?raw=true "Show Smart Plumblines Live Demo")
 
 ![Show Smart Plumblines Demo](https://raw.githubusercontent.com/DeutschMark/Show-Smart-Plumblines/3ecae55c883b3720b8f58adf1f80453607d1cd6d/Screenshots/SmPlL%2012.png?raw=true "Show Smart Plumblines Demo")
 
