@@ -22,7 +22,7 @@ This is usefull for aligning objects by sight. As well as:
 
 ### How to use
 
-When ever you need it, toggle `Show * Smart Plumblines` from the view menu.
+When ever you need it, toggle `Show * Smart Plumblines` from the view menu. There is a shortcut to (de)activate it: ctrl+alt+cmd+P (like Plumblines)
 
 ### Examples
 
