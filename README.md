@@ -10,11 +10,11 @@ Download or clone the whole `Glyphsapp-Plugins`repo (it will contain more plugin
 
 ### Examples
 
-![Show Smart Plumblines Demo](https://raw.githubusercontent.com/DeutschMark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2012.png?raw=true "Show Smart Plumblines Demo")
+![Show Smart Plumblines Demo](https://raw.githubusercontent.com/Mark2Mark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2012.png?raw=true "Show Smart Plumblines Demo")
 
-![Show Smart Plumblines Demo](https://raw.githubusercontent.com/DeutschMark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2013.png?raw=true "Show Smart Plumblines Demo")
+![Show Smart Plumblines Demo](https://raw.githubusercontent.com/Mark2Mark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2013.png?raw=true "Show Smart Plumblines Demo")
 
-![Show Smart Plumblines Demo](https://raw.githubusercontent.com/DeutschMark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2014.png?raw=true "Show Smart Plumblines Demo")
+![Show Smart Plumblines Demo](https://raw.githubusercontent.com/Mark2Mark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2014.png?raw=true "Show Smart Plumblines Demo")
 
 ### Known issues
 
@@ -26,7 +26,7 @@ Feel free to comment or pull requests for any improvements.
 
 ### License
 
-Copyright 2015 [Mark Frömberg](http://www.markfromberg.com/) *@DeutschMark*
+Copyright 2015 [Mark Frömberg](http://www.markfromberg.com/) *@Mark2Mark*
 
 Made possible with the GlyphsSDK by Georg Seifert (@schriftgestalt) and Rainer Erich Scheichelbauer (@mekkablue).
 
