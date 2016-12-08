@@ -39,7 +39,7 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 	
 	def title( self ):
 		try:
-			return "* Smart Plumblines"
+			return "Smart Plumblines"
 		except Exception as e:
 			self.logToConsole( "title: %s" % str(e) )
 	
