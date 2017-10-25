@@ -27,13 +27,17 @@ When ever you need it, toggle `Show * Smart Plumblines` from the view menu. Ther
 
 ### Examples
 
-![Show Smart Plumblines Demo](https://raw.githubusercontent.com/Mark2Mark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2012.png?raw=true "Show Smart Plumblines Demo")
+<p align="center">
 
-![Show Smart Plumblines Demo](https://raw.githubusercontent.com/Mark2Mark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2013.png?raw=true "Show Smart Plumblines Demo")
+<img src="https://raw.githubusercontent.com/Mark2Mark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2012.png" alt="" height="300px">
+   
+<img src="https://raw.githubusercontent.com/Mark2Mark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2013.png" alt="Show Smart Plumblines Demo" height="300px">
 
-![Show Smart Plumblines Demo](https://raw.githubusercontent.com/Mark2Mark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2014.png?raw=true "Show Smart Plumblines Demo")
+<img src="https://raw.githubusercontent.com/Mark2Mark/Glyphsapp-Plugins/Screenshots/Screenshots/SmartPlumblines/SmPlL%2014.png" alt="Show Smart Plumblines Demo" height="300px">
 
-![Show Smart Plumblines Live Demo](https://raw.githubusercontent.com/Mark2Mark/Show-Smart-Plumblines/3f23a95e52f9462428e8a7a0ad9626d3528623fb/Screenshots/SmartPlumblines%20-%20ScreenCast%2002.gif?raw=true "Show Smart Plumblines Live Demo")
+<img src="https://raw.githubusercontent.com/Mark2Mark/Show-Smart-Plumblines/3f23a95e52f9462428e8a7a0ad9626d3528623fb/Screenshots/SmartPlumblines%20-%20ScreenCast%2002.gif" alt="Show Smart Plumblines Demo" height="300px">
+</p>
+
 
 
 ##### Known issues
