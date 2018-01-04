@@ -8,15 +8,9 @@
 
 
 import objc
-# from Foundation import *
-from AppKit import *
+from GlyphsApp.plugins import *
 import sys, os, re
 import math
-
-MainBundle = NSBundle.mainBundle()
-path = MainBundle.bundlePath() + "/Contents/Scripts"
-if not path in sys.path:
-	sys.path.append( path )
 
 import GlyphsApp
 
