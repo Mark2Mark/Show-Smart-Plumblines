@@ -121,6 +121,33 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 		# self.drawTextAtPoint( u"x", (xLayerLeft + self.italo(yCenter), yCenter) )
 		self.drawLine( xCenter + self.italoObject(yDescender-y, height), yDescender, xCenter + self.italoObject(yAscender-y, height), yAscender ) # without angle
 
+	def DrawBounds(self, x, y, width, height):
+		pass
+		# check Skedge Sketch `Layer Bounds with Real Skew`
+		# self.xHeight = self.layer.glyphMetrics()[4]
+		# self.angle = self.layer.glyphMetrics()[5]
+
+		# ### BOUNDS DIMENSIONS
+		# xLeft = x + width
+		# xCenter = (x + width/2)
+		# xRight = x + width
+		# yCenter = (y + height/2)
+		# yTop = y + height
+		# yBottom = y + height
+
+		# ### LAYER/METRIC DIMENSIONS
+		# xLayerLeft = 0
+		# xLayerRight = self.layer.width
+		# yAscender = self.layer.glyphMetrics()[1]
+		# yDescender = self.layer.glyphMetrics()[3]
+
+		# '''outside bounds'''
+		# #self.drawLine( xLayerLeft + self.italo(yCenter), yCenter, xLayerRight + self.italo(yCenter), yCenter)
+		# ### visual debugging:
+		# # self.drawTextAtPoint( u"x", (xLayerLeft + self.italo(yCenter), yCenter) )
+		
+		# self.drawLine( xLeft + self.italoObject(yDescender-y, height), yDescender, xLeft + self.italoObject(yAscender-y, height), yAscender ) # without angle
+
 
 
 	def drawBackgroundForLayer_( self, Layer ):
@@ -134,9 +161,11 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 			PATH
 			'''
 			self.dashed = False
-			NSColor.colorWithCalibratedRed_green_blue_alpha_( *pathColor ).set()
 			for path in Layer.paths:
+				NSColor.colorWithCalibratedRed_green_blue_alpha_( *pathColor ).set()
 				self.DrawCross( *self.BoundsRect(path.bounds) )
+				#NSColor.orangeColor().set()
+				#self.DrawBounds( *self.BoundsRect(path.bounds) )
 
 			'''
 			COMPONENT
