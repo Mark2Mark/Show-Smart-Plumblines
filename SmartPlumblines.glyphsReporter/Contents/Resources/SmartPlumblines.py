@@ -17,33 +17,33 @@ import GlyphsApp
 GlyphsReporterProtocol = objc.protocolNamed( "GlyphsReporter" )
 
 class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
-	
+
 	def init( self ):
 		try:
 			#Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ));
 			return self
 		except Exception as e:
 			self.logToConsole( "init: %s" % str(e) )
-	
+
 	def interfaceVersion( self ):
 		try:
 			return 1
 		except Exception as e:
 			self.logToConsole( "interfaceVersion: %s" % str(e) )
-	
+
 	def title( self ):
 		try:
 			return "Smart Plumblines"
 		except Exception as e:
 			self.logToConsole( "title: %s" % str(e) )
-	
+
 	def keyEquivalent( self ):
 		try:
 			return u"p"
 			# return None
 		except Exception as e:
 			self.logToConsole( "keyEquivalent: %s" % str(e) )
-	
+
 	def modifierMask( self ):
 		'''
 		return NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
@@ -53,7 +53,7 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 			# return 0
 		except Exception as e:
 			self.logToConsole( "modifierMask: %s" % str(e) )
-	
+
 	def drawForegroundForLayer_( self, Layer ):
 		try:
 			pass
@@ -99,7 +99,7 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 		return shift
 
 
-	def DrawCross(self, x, y, width, height):
+	def DrawCross(self, x, y, width, height, color):
 		self.xHeight = self.layer.glyphMetrics()[4]
 		self.angle = self.layer.glyphMetrics()[5]
 
@@ -116,10 +116,25 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 		yDescender = self.layer.glyphMetrics()[3]
 
 		'''outside bounds'''
+		NSColor.colorWithCalibratedRed_green_blue_alpha_( *color ).set()
 		self.drawLine( xLayerLeft + self.italo(yCenter), yCenter, xLayerRight + self.italo(yCenter), yCenter)
 		### visual debugging:
 		# self.drawTextAtPoint( u"x", (xLayerLeft + self.italo(yCenter), yCenter) )
 		self.drawLine( xCenter + self.italoObject(yDescender-y, height), yDescender, xCenter + self.italoObject(yAscender-y, height), yAscender ) # without angle
+
+
+		# Draw Outside Bounds
+		#NSColor.colorWithCalibratedRed_green_blue_alpha_( 0.5, 0, 0, 0.12 ).set()
+		# Horizontals
+		#self.drawLine(xLayerLeft, y, xLayerRight, y)
+		#self.drawLine(xLayerLeft, y+height, xLayerRight, y+height)
+		# Verticlas
+		#self.drawLine( x + self.italoObject(yDescender-y, height), yDescender, x + self.italoObject(yAscender-y, height), yAscender ) # without angle
+
+		# self.drawLine(x + self.italo(yDescender), yDescender, x + self.italo(yAscender), yAscender)
+		# self.drawLine(x+width + self.italo(yDescender), yDescender, x+width + self.italo(yAscender), yAscender)
+
+
 
 	def DrawBounds(self, x, y, width, height):
 		pass
@@ -145,7 +160,7 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 		# #self.drawLine( xLayerLeft + self.italo(yCenter), yCenter, xLayerRight + self.italo(yCenter), yCenter)
 		# ### visual debugging:
 		# # self.drawTextAtPoint( u"x", (xLayerLeft + self.italo(yCenter), yCenter) )
-		
+
 		# self.drawLine( xLeft + self.italoObject(yDescender-y, height), yDescender, xLeft + self.italoObject(yAscender-y, height), yAscender ) # without angle
 
 
@@ -162,8 +177,7 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 			'''
 			self.dashed = False
 			for path in Layer.paths:
-				NSColor.colorWithCalibratedRed_green_blue_alpha_( *pathColor ).set()
-				self.DrawCross( *self.BoundsRect(path.bounds) )
+				self.DrawCross( *self.BoundsRect(path.bounds), color=pathColor )
 				#NSColor.orangeColor().set()
 				#self.DrawBounds( *self.BoundsRect(path.bounds) )
 
@@ -171,17 +185,15 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 			COMPONENT
 			'''
 			self.dashed = False
-			NSColor.colorWithCalibratedRed_green_blue_alpha_( *componentColor ).set()
 			for component in Layer.components:
-				self.DrawCross( *self.BoundsRect(component.bounds) )
+				self.DrawCross( *self.BoundsRect(component.bounds), color=componentColor )
 
 			'''
 			SELECTION
 			'''
 			if Layer.selectionBounds.origin.x < 100000: # check if Selection
-				NSColor.colorWithCalibratedRed_green_blue_alpha_( *selectionColor ).set()
 				self.dashed = True
-				self.DrawCross( *self.BoundsRect(Layer.selectionBounds) )
+				self.DrawCross( *self.BoundsRect(Layer.selectionBounds), color=selectionColor )
 
 				### DRAW BOUNDS OF SELECTION **UC**
 				# self.dashed = False
@@ -199,9 +211,9 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 				# selectionBoundsRect.lineToPoint_((sX + self.italoObject(sY-sY + sHeight, sHeight), sY + sHeight))
 				# selectionBoundsRect.lineToPoint_((sX + sWidth + self.italoObject(sY-sY + sHeight, sHeight), sY + sHeight))
 				# selectionBoundsRect.lineToPoint_((sX + sWidth + self.italoObject(sY-sY, sHeight) , sY))
-				
+
 				# selectionBoundsRect.closePath()
-				# selectionBoundsRect.stroke()				
+				# selectionBoundsRect.stroke()
 
 
 
@@ -209,7 +221,7 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 
 		except Exception as e:
 			self.logToConsole( "drawBackgroundForLayer_: %s" % str(e) )
-	
+
 	def drawBackgroundForInactiveLayer_( self, Layer ):
 		try:
 			pass
@@ -221,7 +233,7 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 		try:
 			glyphEditView = self.controller.graphicView()
 			currentZoom = self.getScale()
-			fontAttributes = { 
+			fontAttributes = {
 				NSFontAttributeName: NSFont.labelFontOfSize_( fontSize/currentZoom ),
 				NSForegroundColorAttributeName: fontColor }
 			displayText = NSAttributedString.alloc().initWithString_attributes_( text, fontAttributes )
@@ -229,10 +241,10 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 			glyphEditView.drawText_atPoint_alignment_( displayText, textPosition, textAlignment )
 		except Exception as e:
 			self.logToConsole( "drawTextAtPoint: %s" % str(e) )
-	
+
 	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
 		return True
-	
+
 	def getHandleSize( self ):
 		try:
 			Selected = NSUserDefaults.standardUserDefaults().integerForKey_( "GSHandleSize" )
@@ -252,13 +264,13 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 		except:
 			self.logToConsole( "Scale defaulting to 1.0" )
 			return 1.0
-	
+
 	def setController_( self, Controller ):
 		try:
 			self.controller = Controller
 		except Exception as e:
 			self.logToConsole( "Could not set controller" )
-	
+
 	def logToConsole( self, message ):
 		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
 		NSLog( myLog )
