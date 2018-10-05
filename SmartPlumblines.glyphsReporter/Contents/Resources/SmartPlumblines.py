@@ -172,6 +172,12 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 			componentColor = 0, 0, 0, 0.1
 			selectionColor = 0, 0, 0.5, 0.2
 
+			# Disable drawing plumblines when space is pressed and exit early
+			currentController = self.controller.view().window().windowController()
+			if currentController:
+				if currentController.SpaceKey():
+					return
+
 			'''
 			PATH
 			'''
