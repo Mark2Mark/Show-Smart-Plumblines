@@ -12,8 +12,8 @@ class SmartPlumblines(ReporterPlugin):
 		self.menuName = Glyphs.localize({
 			'en': 'Smart Plumblines',
 			'de': 'Intelligente Lotschnur',
-			'fr': 'lignes de construction intelligents',
-			'es': 'líneas de construcción inteligentes',
+			'fr': 'lignes intelligentes de construction',
+			'es': 'líneas inteligentes de construcción',
 		})
 		self.keyboardShortcut = 'p'
 		self.keyboardShortcutModifier = NSCommandKeyMask | NSControlKeyMask | NSAlternateKeyMask
