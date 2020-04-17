@@ -11,7 +11,7 @@ class SmartPlumblines(ReporterPlugin):
 	def settings(self):
 		self.menuName = Glyphs.localize({
 			'en': 'Smart Plumblines',
-			'de': 'Intelligentes Schnurlot',
+			'de': 'Intelligente Lotschnur',
 			'fr': 'lignes de construction intelligents',
 			'es': 'líneas de construcción inteligentes',
 		})
