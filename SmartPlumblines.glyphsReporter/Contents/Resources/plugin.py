@@ -1,66 +1,24 @@
-#!/usr/bin/env python
 # encoding: utf-8
-
-# TODO:
-# 	- skew the bounds first? Currently we got bounds and skew later,
-# 		this might lead to inaccuracy? Check with anchor alignment between two points
-# 	- Badge with distance from center points if only to objects
-
+from __future__ import division, print_function, unicode_literals
 
 import objc
+from GlyphsApp import *
 from GlyphsApp.plugins import *
-import sys, os, re
-import math
 
-import GlyphsApp
+class SmartPlumblines(ReporterPlugin):
 
-GlyphsReporterProtocol = objc.protocolNamed( "GlyphsReporter" )
+	@objc.python_method
+	def settings(self):
+		self.menuName = Glyphs.localize({
+			'en': 'Smart Plumblines',
+			'de': 'Intelligentes Schnurlot',
+			'fr': 'lignes de construction intelligents',
+			'es': 'líneas de construcción inteligentes',
+		})
+		self.keyboardShortcut = 'p'
+		self.keyboardShortcutModifier = NSCommandKeyMask | NSControlKeyMask | NSAlternateKeyMask
 
-class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
-
-	def init( self ):
-		try:
-			#Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ));
-			return self
-		except Exception as e:
-			self.logToConsole( "init: %s" % str(e) )
-
-	def interfaceVersion( self ):
-		try:
-			return 1
-		except Exception as e:
-			self.logToConsole( "interfaceVersion: %s" % str(e) )
-
-	def title( self ):
-		try:
-			return "Smart Plumblines"
-		except Exception as e:
-			self.logToConsole( "title: %s" % str(e) )
-
-	def keyEquivalent( self ):
-		try:
-			return u"p"
-			# return None
-		except Exception as e:
-			self.logToConsole( "keyEquivalent: %s" % str(e) )
-
-	def modifierMask( self ):
-		'''
-		return NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
-		'''
-		try:
-			return NSCommandKeyMask | NSControlKeyMask | NSAlternateKeyMask
-			# return 0
-		except Exception as e:
-			self.logToConsole( "modifierMask: %s" % str(e) )
-
-	def drawForegroundForLayer_( self, Layer ):
-		try:
-			pass
-		except Exception as e:
-			self.logToConsole( "drawForegroundForLayer_: %s" % str(e) )
-
-
+	@objc.python_method
 	def BoundsRect(self, NSRect):
 		x = NSRect[0][0]
 		y = NSRect[0][1]
@@ -68,7 +26,7 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 		height = NSRect[1][1]
 		return x, y, width, height
 
-
+	@objc.python_method
 	def drawLine(self, x1, y1, x2, y2):
 		strokeWidth = 1/self.getScale()
 		myPath = NSBezierPath.bezierPath()
@@ -80,6 +38,7 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 		myPath.stroke()
 
 
+	@objc.python_method
 	def italo(self, yPos):
 		'''
 		ITALIC OFFSET
@@ -89,6 +48,7 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 		return shift
 
 
+	@objc.python_method
 	def italoObject(self, yPos, heightOfObject):
 		'''
 		ITALIC OFFSET
@@ -98,7 +58,7 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 		shift = math.tan(math.radians(self.angle)) * yPos - offset
 		return shift
 
-
+	@objc.python_method
 	def DrawCross(self, x, y, width, height, color):
 		self.xHeight = self.layer.glyphMetrics()[4]
 		self.angle = self.layer.glyphMetrics()[5]
@@ -134,8 +94,7 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 		# self.drawLine(x + self.italo(yDescender), yDescender, x + self.italo(yAscender), yAscender)
 		# self.drawLine(x+width + self.italo(yDescender), yDescender, x+width + self.italo(yAscender), yAscender)
 
-
-
+	@objc.python_method
 	def DrawBounds(self, x, y, width, height):
 		pass
 		# check Skedge Sketch `Layer Bounds with Real Skew`
@@ -164,8 +123,8 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 		# self.drawLine( xLeft + self.italoObject(yDescender-y, height), yDescender, xLeft + self.italoObject(yAscender-y, height), yAscender ) # without angle
 
 
-
-	def drawBackgroundForLayer_( self, Layer ):
+	@objc.python_method
+	def background( self, Layer ):
 		try:
 			self.layer = Layer
 			pathColor = 1, 0, 0, 0.2
@@ -221,62 +180,13 @@ class SmartPlumblines ( NSObject, GlyphsReporterProtocol ):
 				# selectionBoundsRect.closePath()
 				# selectionBoundsRect.stroke()
 
-
-
-
-
 		except Exception as e:
 			self.logToConsole( "drawBackgroundForLayer_: %s" % str(e) )
-
-	def drawBackgroundForInactiveLayer_( self, Layer ):
-		try:
-			pass
-		except Exception as e:
-			self.logToConsole( "drawBackgroundForInactiveLayer_: %s" % str(e) )
-
-
-	def drawTextAtPoint( self, text, textPosition, fontSize=9.0, fontColor=NSColor.brownColor() ):
-		try:
-			glyphEditView = self.controller.graphicView()
-			currentZoom = self.getScale()
-			fontAttributes = {
-				NSFontAttributeName: NSFont.labelFontOfSize_( fontSize/currentZoom ),
-				NSForegroundColorAttributeName: fontColor }
-			displayText = NSAttributedString.alloc().initWithString_attributes_( text, fontAttributes )
-			textAlignment = 3 # top left: 6, top center: 7, top right: 8, center left: 3, center center: 4, center right: 5, bottom left: 0, bottom center: 1, bottom right: 2
-			glyphEditView.drawText_atPoint_alignment_( displayText, textPosition, textAlignment )
-		except Exception as e:
-			self.logToConsole( "drawTextAtPoint: %s" % str(e) )
 
 	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
 		return True
 
-	def getHandleSize( self ):
-		try:
-			Selected = NSUserDefaults.standardUserDefaults().integerForKey_( "GSHandleSize" )
-			if Selected == 0:
-				return 5.0
-			elif Selected == 2:
-				return 10.0
-			else:
-				return 7.0 # Regular
-		except Exception as e:
-			self.logToConsole( "getHandleSize: HandleSize defaulting to 7.0. %s" % str(e) )
-			return 7.0
-
-	def getScale( self ):
-		try:
-			return self.controller.graphicView().scale()
-		except:
-			self.logToConsole( "Scale defaulting to 1.0" )
-			return 1.0
-
-	def setController_( self, Controller ):
-		try:
-			self.controller = Controller
-		except Exception as e:
-			self.logToConsole( "Could not set controller" )
-
-	def logToConsole( self, message ):
-		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
-		NSLog( myLog )
+	@objc.python_method
+	def __file__(self):
+		"""Please leave this method unchanged"""
+		return __file__
