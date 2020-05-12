@@ -57,8 +57,12 @@ class SmartPlumblines(ReporterPlugin):
 
 	@objc.python_method
 	def DrawCross(self, x, y, width, height, color):
-		self.xHeight = self.layer.master.xHeight
-		self.angle = self.layer.master.italicAngle
+		if self.layer.isKindOfClass_(GSBackgroundLayer):
+			self.xHeight = self.layer.foreground().master.xHeight
+			self.angle = self.layer.foreground().master.italicAngle
+		else:
+			self.xHeight = self.layer.master.xHeight
+			self.angle = self.layer.master.italicAngle
 
 		### BOUNDS DIMENSIONS
 		xCenter = (x + width/2)
@@ -73,7 +77,8 @@ class SmartPlumblines(ReporterPlugin):
 		yDescender = self.layer.glyphMetrics()[3]
 
 		'''outside bounds'''
-		NSColor.colorWithCalibratedRed_green_blue_alpha_( *color ).set()
+		#NSColor.colorWithCalibratedRed_green_blue_alpha_( *color ).set()
+		color.set()
 		self.drawLine( xLayerLeft + self.italo(yCenter), yCenter, xLayerRight + self.italo(yCenter), yCenter)
 		### visual debugging:
 		# self.drawTextAtPoint( u"x", (xLayerLeft + self.italo(yCenter), yCenter) )
@@ -83,9 +88,9 @@ class SmartPlumblines(ReporterPlugin):
 	def background( self, Layer ):
 		try:
 			self.layer = Layer
-			pathColor = 1, 0, 0, 0.2
-			componentColor = 0, 0, 0, 0.1
-			selectionColor = 0, 0, 0.5, 0.2
+			pathColor = NSColor.textColor().blendedColorWithFraction_ofColor_(0.5, NSColor.redColor()).colorWithAlphaComponent_(0.2) # 1, 0, 0, 0.2
+			componentColor = NSColor.textColor().colorWithAlphaComponent_(0.2) # 0, 0, 0, 0.1
+			selectionColor = NSColor.textColor().blendedColorWithFraction_ofColor_(0.5, NSColor.blueColor()).colorWithAlphaComponent_(0.2) # 0, 0, 0.5, 0.2
 
 			# Disable drawing plumblines when space is pressed and exit early
 			currentController = self.controller.view().window().windowController()
