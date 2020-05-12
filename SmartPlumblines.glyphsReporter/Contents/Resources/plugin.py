@@ -88,9 +88,9 @@ class SmartPlumblines(ReporterPlugin):
 	def background( self, Layer ):
 		try:
 			self.layer = Layer
-			pathColor = NSColor.textColor().blendedColorWithFraction_ofColor_(0.5, NSColor.redColor()).colorWithAlphaComponent_(0.2) # 1, 0, 0, 0.2
+			pathColor = NSColor.textColor().blendedColorWithFraction_ofColor_(0.6, NSColor.redColor()).colorWithAlphaComponent_(0.3) # 1, 0, 0, 0.2
 			componentColor = NSColor.textColor().colorWithAlphaComponent_(0.2) # 0, 0, 0, 0.1
-			selectionColor = NSColor.textColor().blendedColorWithFraction_ofColor_(0.5, NSColor.blueColor()).colorWithAlphaComponent_(0.2) # 0, 0, 0.5, 0.2
+			selectionColor = NSColor.textColor().blendedColorWithFraction_ofColor_(0.6, NSColor.blueColor()).colorWithAlphaComponent_(0.3) # 0, 0, 0.5, 0.2
 
 			# Disable drawing plumblines when space is pressed and exit early
 			currentController = self.controller.view().window().windowController()
