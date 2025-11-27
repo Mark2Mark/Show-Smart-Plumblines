@@ -12,10 +12,10 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>SmartPlumblines</string>
-	<key>CFBundleVersion</key>
-	<string>8</string>
-	<key>CFBundleShortVersionString</key>
-	<string>2.0.1</string>
+	<key>CFBundleShortVersionString</key> <!-- 1.0 -->
+	<string>2.1.0</string>
+	<key>CFBundleVersion</key> <!-- 123 -->
+	<string>9</string>
 	<key>UpdateFeedURL</key>
 	<string>https://raw.githubusercontent.com/DeutschMark/Show-Smart-Plumblines/master/SmartPlumblines.glyphsReporter/Contents/Info.plist</string>
 	<key>productPageURL</key>

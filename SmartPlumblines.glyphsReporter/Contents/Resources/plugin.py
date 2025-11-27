@@ -5,6 +5,13 @@ import objc
 from GlyphsApp import *
 from GlyphsApp.plugins import *
 from math import tan, radians
+from AppKit import (
+    NSColor,
+    NSCommandKeyMask,
+    NSControlKeyMask,
+    NSAlternateKeyMask,
+    NSBezierPath,
+)
 
 
 class SmartPlumblines(ReporterPlugin):
