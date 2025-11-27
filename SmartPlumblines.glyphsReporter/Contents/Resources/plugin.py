@@ -33,7 +33,7 @@ class SmartPlumblines(ReporterPlugin):
     @objc.python_method
     def drawLine(self, x1, y1, x2, y2, offset=False):
         scale = self.getScale()
-        strokeWidth = 1 / scale
+        strokeWidth = 0.5 / scale
         myPath = NSBezierPath.bezierPath()
         myPath.moveToPoint_((x1, y1))
         myPath.lineToPoint_((x2, y2))
@@ -109,15 +109,17 @@ class SmartPlumblines(ReporterPlugin):
     def background(self, Layer):
         try:
             self.layer = Layer
-            pathColor = NSColor.systemPinkColor().colorWithAlphaComponent_(
-                0.3
-            )  # 1, 0, 0, 0.2
-            componentColor = NSColor.textColor().colorWithAlphaComponent_(
-                0.2
-            )  # 0, 0, 0, 0.1
-            selectionColor = NSColor.systemMintColor().colorWithAlphaComponent_(
-                0.7
-            )  # 0, 0, 0.5, 0.2
+            pathColor = (
+                NSColor.textColor()
+                .blendedColorWithFraction_ofColor_(0.7, NSColor.systemPinkColor())
+                .colorWithAlphaComponent_(0.7)
+            )
+            componentColor = NSColor.textColor().colorWithAlphaComponent_(0.3)
+            selectionColor = (
+                NSColor.textColor()
+                .blendedColorWithFraction_ofColor_(0.7, NSColor.systemMintColor())
+                .colorWithAlphaComponent_(0.7)
+            )
 
             # Disable drawing plumblines when space is pressed and exit early
             currentController = self.controller.view().window().windowController()
@@ -137,7 +139,7 @@ class SmartPlumblines(ReporterPlugin):
             """
 			COMPONENT
 			"""
-            self.dashed = False
+            self.dashed = True
             for component in Layer.components:
                 self.DrawCross(*self.BoundsRect(component.bounds), color=componentColor)
 
