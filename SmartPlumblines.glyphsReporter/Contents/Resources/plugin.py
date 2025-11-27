@@ -31,7 +31,7 @@ class SmartPlumblines(ReporterPlugin):
         return x, y, width, height
 
     @objc.python_method
-    def drawLine(self, x1, y1, x2, y2):
+    def drawLine(self, x1, y1, x2, y2, offset=False):
         scale = self.getScale()
         strokeWidth = 1 / scale
         myPath = NSBezierPath.bezierPath()
@@ -40,7 +40,9 @@ class SmartPlumblines(ReporterPlugin):
         myPath.setLineWidth_(strokeWidth)
         dash_a = float(6.0 / scale)
         if self.dashed:
-            myPath.setLineDash_count_phase_((dash_a, dash_a), 2, 0)
+            myPath.setLineDash_count_phase_(
+                (dash_a, dash_a), 2, dash_a if offset else 0.0
+            )
         myPath.stroke()
 
     @objc.python_method
@@ -63,7 +65,7 @@ class SmartPlumblines(ReporterPlugin):
         return shift
 
     @objc.python_method
-    def DrawCross(self, x, y, width, height, color):
+    def DrawCross(self, x, y, width, height, color, offset=False):
         if self.layer.isKindOfClass_(GSBackgroundLayer):
             self.xHeight = self.layer.foreground().master.xHeight
             self.angle = self.layer.foreground().master.italicAngle
@@ -91,6 +93,7 @@ class SmartPlumblines(ReporterPlugin):
             yCenter,
             xLayerRight + self.italo(yCenter),
             yCenter,
+            offset,
         )
         ### visual debugging:
         # self.drawTextAtPoint( u"x", (xLayerLeft + self.italo(yCenter), yCenter) )
@@ -99,24 +102,21 @@ class SmartPlumblines(ReporterPlugin):
             yDescender,
             xCenter + self.italoObject(yAscender - y, height),
             yAscender,
+            offset,
         )  # without angle
 
     @objc.python_method
     def background(self, Layer):
         try:
             self.layer = Layer
-            pathColor = (
-                NSColor.textColor()
-                .blendedColorWithFraction_ofColor_(0.6, NSColor.redColor())
-                .colorWithAlphaComponent_(0.3)
+            pathColor = NSColor.systemPinkColor().colorWithAlphaComponent_(
+                0.3
             )  # 1, 0, 0, 0.2
             componentColor = NSColor.textColor().colorWithAlphaComponent_(
                 0.2
             )  # 0, 0, 0, 0.1
-            selectionColor = (
-                NSColor.textColor()
-                .blendedColorWithFraction_ofColor_(0.6, NSColor.blueColor())
-                .colorWithAlphaComponent_(0.3)
+            selectionColor = NSColor.systemMintColor().colorWithAlphaComponent_(
+                0.7
             )  # 0, 0, 0.5, 0.2
 
             # Disable drawing plumblines when space is pressed and exit early
@@ -128,9 +128,11 @@ class SmartPlumblines(ReporterPlugin):
             """
 			PATH
 			"""
-            self.dashed = False
+            self.dashed = True
             for path in Layer.paths:
-                self.DrawCross(*self.BoundsRect(path.bounds), color=pathColor)
+                self.DrawCross(
+                    *self.BoundsRect(path.bounds), color=pathColor, offset=True
+                )
 
             """
 			COMPONENT
