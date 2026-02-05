@@ -62,47 +62,49 @@ class SmartPlumblines(ReporterPlugin):
         return shift
 
     @objc.python_method
-    def deslantedX(self, px, py, t, halfXHeight):
-        """Single point's x in italic-compensated space."""
-        return px - t * (py - halfXHeight)
+    def collectPositions(self, layer, transform):
+        """Recursively collect transformed (x, y) from paths and nested components."""
+        positions = []
+        for path in layer.paths:
+            for node in path.nodes:
+                nx, ny = node.position.x, node.position.y
+                positions.append((
+                    transform[0] * nx + transform[2] * ny + transform[4],
+                    transform[1] * nx + transform[3] * ny + transform[5],
+                ))
+        for comp in layer.components:
+            try:
+                ct = comp.transform
+                combined = (
+                    transform[0] * ct[0] + transform[2] * ct[1],
+                    transform[1] * ct[0] + transform[3] * ct[1],
+                    transform[0] * ct[2] + transform[2] * ct[3],
+                    transform[1] * ct[2] + transform[3] * ct[3],
+                    transform[0] * ct[4] + transform[2] * ct[5] + transform[4],
+                    transform[1] * ct[4] + transform[3] * ct[5] + transform[5],
+                )
+                positions.extend(
+                    self.collectPositions(comp.componentLayer, combined)
+                )
+            except Exception:
+                pass
+        return positions
 
     @objc.python_method
-    def deslantedCenter(self, points, transform=None):
-        """X-center of points in italic-compensated space."""
+    def deslantedCenter(self, positions):
+        """X-center of (x, y) positions in italic-compensated space."""
+        if not positions:
+            return None
         t = tan(radians(self.angle))
         halfXHeight = self.xHeight / 2
         min_x = float("inf")
         max_x = float("-inf")
-
-        def update(px, py):
-            x_desl = self.deslantedX(px, py, t, halfXHeight)
-            return min(min_x, x_desl), max(max_x, x_desl)
-
-        for pt in points:
-            # Expand selected components into their transformed source nodes
-            if hasattr(pt, "componentLayer"):
-                try:
-                    tr = pt.transform
-                    for path in pt.componentLayer.paths:
-                        for node in path.nodes:
-                            nx, ny = node.position.x, node.position.y
-                            min_x, max_x = update(
-                                tr[0] * nx + tr[2] * ny + tr[4],
-                                tr[1] * nx + tr[3] * ny + tr[5],
-                            )
-                except Exception:
-                    pass
-                continue
-            try:
-                px, py = pt.position.x, pt.position.y
-            except AttributeError:
-                continue
-            if transform is not None:
-                px, py = (
-                    transform[0] * px + transform[2] * py + transform[4],
-                    transform[1] * px + transform[3] * py + transform[5],
-                )
-            min_x, max_x = update(px, py)
+        for px, py in positions:
+            x_desl = px - t * (py - halfXHeight)
+            if x_desl < min_x:
+                min_x = x_desl
+            if x_desl > max_x:
+                max_x = x_desl
         if min_x == float("inf"):
             return None
         return (min_x + max_x) / 2
@@ -186,9 +188,12 @@ class SmartPlumblines(ReporterPlugin):
 			"""
             self.dashed = True
             for path in Layer.paths:
+                positions = [
+                    (n.position.x, n.position.y) for n in path.nodes
+                ]
                 self.DrawCross(
                     *self.BoundsRect(path.bounds), color=pathColor, offset=True,
-                    italicCenter=self.deslantedCenter(path.nodes),
+                    italicCenter=self.deslantedCenter(positions),
                 )
 
             """
@@ -196,18 +201,15 @@ class SmartPlumblines(ReporterPlugin):
 			"""
             self.dashed = True
             for component in Layer.components:
-                ic = None
                 try:
-                    nodes = []
-                    for path in component.componentLayer.paths:
-                        nodes.extend(path.nodes)
-                    if nodes:
-                        ic = self.deslantedCenter(nodes, component.transform)
+                    positions = self.collectPositions(
+                        component.componentLayer, component.transform
+                    )
                 except Exception:
-                    pass
+                    positions = []
                 self.DrawCross(
                     *self.BoundsRect(component.bounds), color=componentColor,
-                    italicCenter=ic,
+                    italicCenter=self.deslantedCenter(positions),
                 )
 
             """
@@ -215,9 +217,25 @@ class SmartPlumblines(ReporterPlugin):
 			"""
             if Layer.selectionBounds.origin.x < 100000:  # check if Selection
                 self.dashed = True
+                positions = []
+                for item in Layer.selection:
+                    if hasattr(item, "componentLayer"):
+                        try:
+                            positions.extend(self.collectPositions(
+                                item.componentLayer, item.transform
+                            ))
+                        except Exception:
+                            pass
+                    else:
+                        try:
+                            positions.append(
+                                (item.position.x, item.position.y)
+                            )
+                        except AttributeError:
+                            pass
                 self.DrawCross(
                     *self.BoundsRect(Layer.selectionBounds), color=selectionColor,
-                    italicCenter=self.deslantedCenter(Layer.selection),
+                    italicCenter=self.deslantedCenter(positions),
                 )
 
         except Exception as e:
