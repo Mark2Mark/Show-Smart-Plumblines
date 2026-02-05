@@ -62,21 +62,47 @@ class SmartPlumblines(ReporterPlugin):
         return shift
 
     @objc.python_method
-    def deslantedCenter(self, points):
+    def deslantedX(self, px, py, t, halfXHeight):
+        """Single point's x in italic-compensated space."""
+        return px - t * (py - halfXHeight)
+
+    @objc.python_method
+    def deslantedCenter(self, points, transform=None):
         """X-center of points in italic-compensated space."""
         t = tan(radians(self.angle))
         halfXHeight = self.xHeight / 2
         min_x = float("inf")
         max_x = float("-inf")
+
+        def update(px, py):
+            x_desl = self.deslantedX(px, py, t, halfXHeight)
+            return min(min_x, x_desl), max(max_x, x_desl)
+
         for pt in points:
+            # Expand selected components into their transformed source nodes
+            if hasattr(pt, "componentLayer"):
+                try:
+                    tr = pt.transform
+                    for path in pt.componentLayer.paths:
+                        for node in path.nodes:
+                            nx, ny = node.position.x, node.position.y
+                            min_x, max_x = update(
+                                tr[0] * nx + tr[2] * ny + tr[4],
+                                tr[1] * nx + tr[3] * ny + tr[5],
+                            )
+                except Exception:
+                    pass
+                continue
             try:
-                x_desl = pt.position.x - t * (pt.position.y - halfXHeight)
+                px, py = pt.position.x, pt.position.y
             except AttributeError:
                 continue
-            if x_desl < min_x:
-                min_x = x_desl
-            if x_desl > max_x:
-                max_x = x_desl
+            if transform is not None:
+                px, py = (
+                    transform[0] * px + transform[2] * py + transform[4],
+                    transform[1] * px + transform[3] * py + transform[5],
+                )
+            min_x, max_x = update(px, py)
         if min_x == float("inf"):
             return None
         return (min_x + max_x) / 2
@@ -107,14 +133,24 @@ class SmartPlumblines(ReporterPlugin):
         )
         ### visual debugging:
         # self.drawTextAtPoint( u"x", (xLayerLeft + self.italo(yCenter), yCenter) )
-        xMid = italicCenter if italicCenter is not None else xCenter
-        self.drawLine(
-            xMid + self.italo(yDescender),
-            yDescender,
-            xMid + self.italo(yAscender),
-            yAscender,
-            offset,
-        )
+        if italicCenter is not None:
+            self.drawLine(
+                italicCenter + self.italo(yDescender),
+                yDescender,
+                italicCenter + self.italo(yAscender),
+                yAscender,
+                offset,
+            )
+        else:
+            # Original behavior for components: pivot around object's own center
+            t = tan(radians(self.angle))
+            self.drawLine(
+                xCenter + t * (yDescender - yCenter),
+                yDescender,
+                xCenter + t * (yAscender - yCenter),
+                yAscender,
+                offset,
+            )
 
     @objc.python_method
     def background(self, Layer):
@@ -160,7 +196,19 @@ class SmartPlumblines(ReporterPlugin):
 			"""
             self.dashed = True
             for component in Layer.components:
-                self.DrawCross(*self.BoundsRect(component.bounds), color=componentColor)
+                ic = None
+                try:
+                    nodes = []
+                    for path in component.componentLayer.paths:
+                        nodes.extend(path.nodes)
+                    if nodes:
+                        ic = self.deslantedCenter(nodes, component.transform)
+                except Exception:
+                    pass
+                self.DrawCross(
+                    *self.BoundsRect(component.bounds), color=componentColor,
+                    italicCenter=ic,
+                )
 
             """
 			SELECTION
