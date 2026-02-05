@@ -62,24 +62,27 @@ class SmartPlumblines(ReporterPlugin):
         return shift
 
     @objc.python_method
-    def italoObject(self, yPos, heightOfObject):
-        """
-        ITALIC OFFSET
-        """
-        ### ROTATION around half object height
-        offset = tan(radians(self.angle)) * heightOfObject / 2
-        shift = tan(radians(self.angle)) * yPos - offset
-        return shift
+    def deslantedCenter(self, points):
+        """X-center of points in italic-compensated space."""
+        t = tan(radians(self.angle))
+        halfXHeight = self.xHeight / 2
+        min_x = float("inf")
+        max_x = float("-inf")
+        for pt in points:
+            try:
+                x_desl = pt.position.x - t * (pt.position.y - halfXHeight)
+            except AttributeError:
+                continue
+            if x_desl < min_x:
+                min_x = x_desl
+            if x_desl > max_x:
+                max_x = x_desl
+        if min_x == float("inf"):
+            return None
+        return (min_x + max_x) / 2
 
     @objc.python_method
-    def DrawCross(self, x, y, width, height, color, offset=False):
-        if self.layer.isKindOfClass_(GSBackgroundLayer):
-            self.xHeight = self.layer.foreground().master.xHeight
-            self.angle = self.layer.foreground().master.italicAngle
-        else:
-            self.xHeight = self.layer.master.xHeight
-            self.angle = self.layer.master.italicAngle
-
+    def DrawCross(self, x, y, width, height, color, offset=False, italicCenter=None):
         ### BOUNDS DIMENSIONS
         xCenter = x + width / 2
         xRight = x + width
@@ -104,18 +107,26 @@ class SmartPlumblines(ReporterPlugin):
         )
         ### visual debugging:
         # self.drawTextAtPoint( u"x", (xLayerLeft + self.italo(yCenter), yCenter) )
+        xMid = italicCenter if italicCenter is not None else xCenter
         self.drawLine(
-            xCenter + self.italoObject(yDescender - y, height),
+            xMid + self.italo(yDescender),
             yDescender,
-            xCenter + self.italoObject(yAscender - y, height),
+            xMid + self.italo(yAscender),
             yAscender,
             offset,
-        )  # without angle
+        )
 
     @objc.python_method
     def background(self, Layer):
         try:
             self.layer = Layer
+            if Layer.isKindOfClass_(GSBackgroundLayer):
+                self.xHeight = Layer.foreground().master.xHeight
+                self.angle = Layer.foreground().master.italicAngle
+            else:
+                self.xHeight = Layer.master.xHeight
+                self.angle = Layer.master.italicAngle
+
             pathColor = (
                 NSColor.textColor()
                 .blendedColorWithFraction_ofColor_(0.7, NSColor.systemPinkColor())
@@ -140,7 +151,8 @@ class SmartPlumblines(ReporterPlugin):
             self.dashed = True
             for path in Layer.paths:
                 self.DrawCross(
-                    *self.BoundsRect(path.bounds), color=pathColor, offset=True
+                    *self.BoundsRect(path.bounds), color=pathColor, offset=True,
+                    italicCenter=self.deslantedCenter(path.nodes),
                 )
 
             """
@@ -156,7 +168,8 @@ class SmartPlumblines(ReporterPlugin):
             if Layer.selectionBounds.origin.x < 100000:  # check if Selection
                 self.dashed = True
                 self.DrawCross(
-                    *self.BoundsRect(Layer.selectionBounds), color=selectionColor
+                    *self.BoundsRect(Layer.selectionBounds), color=selectionColor,
+                    italicCenter=self.deslantedCenter(Layer.selection),
                 )
 
         except Exception as e:
